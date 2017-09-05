@@ -89,6 +89,7 @@ def menu
   puts ""
   puts "1. Registrarse"
   puts "2. Iniciar sesion"
+  puts "3. Seed"
   puts "0. Salir"
 end
 
@@ -196,48 +197,60 @@ end
     nickname: "yonga"
 )
 
+
 ######## Seed
 
-require 'faker'
-chars = 'abcdefghjkmnpqrstuvwxyz0123456789'
-puts @rand_chars
-$i = 0
-$num = 10
-@users1 = {}
+def seed
 
-
-while $i < $num  do
+  require 'faker'
+  chars = 'abcdefghjkmnpqrstuvwxyz0123456789'
+  puts @rand_chars
+  $i = 0
+  $num = 10
+  $j = 0
+  @users1 = {}
   fake_posts_all = []
-  fake_nickname = Faker::Internet.user_name(Faker::GameOfThrones.character, %w(. _ -))
-  fake_email= Faker::Internet.free_email(fake_nickname)
-  @rand_chars = rand(chars.size)
-  fake_email = @rand_chars.to_s + fake_email
-  fake_pass= Faker::Internet.password(8,8)
 
-    while $i < $num  do
-    fake_post= Faker::GameOfThrones.character + " will die in " + Faker::GameOfThrones.city
-    fake_posts_all << Post.new(body: fake_post)
-    end
+  while $i < $num  do
+    fake_nickname = Faker::Internet.user_name(Faker::GameOfThrones.character, %w(. _ -))
+    fake_email= Faker::Internet.free_email(fake_nickname)
+    @rand_chars = rand(chars.size)
+    fake_email = @rand_chars.to_s + fake_email
+    #fake_email = fake_email.gsub!(/[-]/,'_')
+    fake_pass= Faker::Internet.password(8,8)
 
-    @users1[fake_email] = User.new(
-        email: fake_email,
-        password: fake_pass,
-        nickname: fake_nickname,
-        posts: fake_posts_all
-        )
+      while $j < $num  do
+        fake_post= Faker::GameOfThrones.character + " will die in " + Faker::GameOfThrones.city
+        fake_posts_all << Post.new(body: fake_post)
+      #  fake_posts_all << fake_post
+      $j=$j+1
+      end
 
+      @users1[fake_email] = User.new(
+          email: fake_email,
+          password: fake_pass,
+          nickname: fake_nickname,
+          posts: fake_posts_all
+      )
 
-  puts fake_email
-  puts fake_nickname
-  puts fake_pass
-  puts ""
-  puts fake_post
+    puts fake_email.inspect
+    puts fake_nickname.inspect
+    puts fake_pass.inspect
+    puts ""
+    puts fake_posts_all.inspect
 
-   $i=$i+1
-end
+    puts @users1.inspect
 
+     $i=$i+1
+  end
+
+system("clear")
 puts @users1.inspect
 
+puts "Valar Morghulis -> Presione una tecla para continuar"
+gets.chomp
+
+end
 ######## End Seed
 
 
@@ -261,8 +274,10 @@ while @input != 0 do
     case @input
     when 1 then sign_up
     when 2 then sign_in
+    when 3 then seed
     end
   end
   @current_user ? logged_in_menu : menu
   @input = gets.chomp.to_i
 end
+#
