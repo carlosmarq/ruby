@@ -1,0 +1,7 @@
+<h1>"Sing in"</h1>
+<%= form_for :session, url: sing_in_path, method: :post do |f|%>
+  <% f.label :email %><br>
+  <% f.email_field :email %><br>
+  <% f.label :password %><br>
+  <% f.email_field :password %><br>
+  <% f.submit %>
